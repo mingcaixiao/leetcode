@@ -32,16 +32,13 @@ public:
     void preorderTraversalFind(TreeNode* root, int target, TreeNode*& targetNode, std::unordered_map<int, TreeNode*>& nodeFatherMap){
         if(root == nullptr)return;
         if(root->val == target) targetNode = root;
-        if(root->left != nullptr){
-            nodeFatherMap.insert({root->left->val, root});
-            preorderTraversalFind(root->left, target, targetNode, nodeFatherMap);
-        }
-        if(root->right != nullptr){
-            nodeFatherMap.insert({root->right->val, root});
-            preorderTraversalFind(root->right, target, targetNode, nodeFatherMap);
+        for(auto& node: std::vector<TreeNode*>{root->left, root->right}){
+            if(node != nullptr){
+                nodeFatherMap.insert({node->val, root});
+                preorderTraversalFind(node, target, targetNode, nodeFatherMap);
+            }
         }
     }
-
     int amountOfTime(TreeNode* root, int start) {
         TreeNode* startNode = nullptr;
         std::unordered_map<int, TreeNode*> nodeFatherMap;
@@ -57,17 +54,11 @@ public:
             for(int i = 0; i < level_size; ++i){    
                 p = node_queue.front();
                 node_queue.pop();
-                if(p->left != nullptr && infected_node.find(p->left->val) == infected_node.end()){
-                    node_queue.push(p->left);
-                    infected_node.insert(p->left->val);
-                }
-                if(p->right != nullptr && infected_node.find(p->right->val) == infected_node.end()){
-                    node_queue.push(p->right);
-                    infected_node.insert(p->right->val);
-                }
-                if(nodeFatherMap[p->val] != nullptr && infected_node.find(nodeFatherMap[p->val]->val) == infected_node.end()){
-                    node_queue.push(nodeFatherMap[p->val]);
-                    infected_node.insert(nodeFatherMap[p->val]->val);
+                for(auto& node: std::vector<TreeNode*>{p->left, p->right, nodeFatherMap[p->val]}){
+                    if(node != nullptr && infected_node.find(node->val) == infected_node.end()){
+                        node_queue.push(node);
+                        infected_node.insert(node->val);
+                    }
                 }
             }
             ++result;
