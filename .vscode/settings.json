@@ -62,6 +62,8 @@
     "algorithm": "cpp",
     "set": "cpp",
     "optional": "cpp",
-    "xtree": "cpp"
-  }
+    "xtree": "cpp",
+    "string": "cpp"
+  },
+  "C_Cpp.default.cppStandard": "c++17"
 }
